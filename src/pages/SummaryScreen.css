@@ -1,0 +1,201 @@
+/* ========================================
+   Summary Screen Styles
+   ======================================== */
+
+.summary {
+  flex: 1;
+  padding: var(--space-xl) var(--space-lg);
+  max-width: var(--max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.summary__hero {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.summary__check {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--color-success-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  margin: 0 auto var(--space-lg);
+  box-shadow: 0 8px 30px rgba(0, 184, 148, 0.2);
+}
+
+.summary__title {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.summary__subtitle {
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* --- Section Review Cards --- */
+.summary__sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-2xl);
+}
+
+.summary-section {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.summary-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-base) var(--space-xl);
+  background: var(--color-input-bg);
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  user-select: none;
+}
+
+.summary-section__header:hover {
+  background: var(--color-primary-ultralight);
+}
+
+.summary-section__header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.summary-section__icon {
+  font-size: 1.25rem;
+}
+
+.summary-section__title {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.summary-section__toggle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+  transition: transform var(--transition-base);
+}
+
+.summary-section__toggle--open {
+  transform: rotate(180deg);
+}
+
+.summary-section__body {
+  padding: var(--space-lg) var(--space-xl);
+}
+
+.summary-section__edit {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-base);
+  padding: var(--space-sm) var(--space-base);
+  background: var(--color-primary-ultralight);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.summary-section__edit:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* --- Answer Items --- */
+.answer-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.answer-item:last-child {
+  border-bottom: none;
+}
+
+.answer-item__question {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.answer-item__value {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.answer-item__value--empty {
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* --- Footer Actions --- */
+.summary__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-base);
+  align-items: center;
+  margin-top: var(--space-xl);
+}
+
+.summary__actions-row {
+  display: flex;
+  gap: var(--space-base);
+  width: 100%;
+  max-width: 500px;
+}
+
+.summary__disclaimer {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.6;
+  max-width: 500px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+  .summary {
+    padding: var(--space-base);
+  }
+
+  .summary-section__header {
+    padding: var(--space-md) var(--space-base);
+  }
+
+  .summary-section__body {
+    padding: var(--space-base);
+  }
+
+  .summary__actions-row {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,111 @@
+/* ========================================
+   Admin Login Screen Styles
+   ======================================== */
+
+.login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-bg);
+  padding: var(--space-lg);
+}
+
+.login__card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl);
+  box-shadow: var(--shadow-xl);
+}
+
+.login__header {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.login__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-lg);
+  background: var(--gradient-header);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  margin: 0 auto var(--space-lg);
+  box-shadow: 0 8px 24px rgba(107, 74, 226, 0.3);
+}
+
+.login__title {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.login__subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.login__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.login__label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.login__input {
+  padding: var(--space-md) var(--space-base);
+  background: var(--color-input-bg);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  outline: none;
+}
+
+.login__input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-ultralight);
+}
+
+.login__error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-base);
+  background: var(--color-error-light);
+  border: 1px solid rgba(225, 112, 85, 0.2);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+  animation: fadeInBounce 0.3s ease;
+}
+
+.login__footer {
+  text-align: center;
+  margin-top: var(--space-xl);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.login__footer a {
+  color: var(--color-primary);
+  text-decoration: none;
+}

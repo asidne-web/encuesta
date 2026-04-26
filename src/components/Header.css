@@ -1,0 +1,111 @@
+/* ========================================
+   Header Component Styles
+   ======================================== */
+
+.header {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.header__logo {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--gradient-header);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: white;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+}
+
+.header__title {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  background: var(--gradient-header);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.3px;
+}
+
+.header__subtitle {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.header__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-base);
+}
+
+.header__user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-base);
+  background: var(--color-input-bg);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.header__user-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: var(--gradient-header);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+}
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+  .header__inner {
+    padding: 0 var(--space-base);
+  }
+
+  .header__title {
+    font-size: var(--font-size-lg);
+  }
+
+  .header__subtitle {
+    display: none;
+  }
+
+  .header__user span:not(.header__user-icon) {
+    display: none;
+  }
+}
