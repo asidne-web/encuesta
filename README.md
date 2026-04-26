@@ -1,5 +1,7 @@
 # RentaFácil — Cuestionario IRPF 2025
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fasidne-web%2Fencuesta)
+
 Aplicación web de cuestionario previo para la Declaración de la Renta de personas físicas en España.
 
 ## 🚀 Inicio rápido (Modo Local)
