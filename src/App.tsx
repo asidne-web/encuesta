@@ -166,7 +166,6 @@ function App() {
             clientNIF={survey.clientNIF}
             sections={surveySections}
             answers={survey.answers}
-            startedAt={survey.startedAt}
             onEditSection={handleEditSection}
             onSubmit={handleSubmit}
             onReset={handleReset}

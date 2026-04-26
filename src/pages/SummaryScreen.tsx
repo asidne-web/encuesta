@@ -9,7 +9,6 @@ interface SummaryScreenProps {
   clientNIF: string;
   sections: SurveySection[];
   answers: SurveyAnswers;
-  startedAt: string;
   onEditSection: (stepIndex: number) => void;
   onSubmit: () => void;
   onReset: () => void;
@@ -124,7 +123,6 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
   clientNIF,
   sections,
   answers,
-  startedAt,
   onEditSection,
   onSubmit,
   onReset,

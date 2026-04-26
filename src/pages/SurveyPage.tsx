@@ -131,7 +131,7 @@ export const SurveyPage: React.FC<SurveyPageProps> = ({
                     <QuestionRenderer
                       key={q.id}
                       question={q}
-                      value={answers[q.id] ?? ''}
+                      value={(answers[q.id] as any) ?? ''}
                       onChange={onAnswer}
                       error={errors[q.id]}
                       allAnswers={answers}
