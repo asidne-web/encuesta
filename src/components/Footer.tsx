@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { isSupabaseConfigured } from '../lib/supabase';
 import './Footer.css';
 
@@ -7,7 +8,9 @@ export const Footer: React.FC = () => (
     <div className="footer__inner">
       <div className="footer__left">
         <span className="footer__brand">RentaFácil</span>
-        <span className="footer__copy">© {new Date().getFullYear()} — Cuestionario IRPF</span>
+        <Link to="/admin" className="footer__copy" style={{ textDecoration: 'none', color: 'inherit', cursor: 'default' }}>
+          © {new Date().getFullYear()} — Cuestionario IRPF
+        </Link>
       </div>
       <div className="footer__right">
         <span className="footer__link">Política de privacidad</span>
