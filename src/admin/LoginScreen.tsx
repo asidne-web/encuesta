@@ -9,7 +9,7 @@ export const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) return;
     await signIn(email.trim(), password);
@@ -29,7 +29,7 @@ export const LoginScreen: React.FC = () => {
           <p className="login__subtitle">RentaFácil — Cuestionario IRPF 2025</p>
         </div>
 
-        <form className="login__form" onSubmit={handleSubmit}>
+        <form className="login__form" onSubmit={handleLoginSubmit}>
           <div className="login__field">
             <label className="login__label" htmlFor="admin-email">
               Correo electrónico
