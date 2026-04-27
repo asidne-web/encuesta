@@ -1,25 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { FieldGroup, TextInput } from '../components/FormControls';
+import { validateSpanishNIF } from '../lib/validations';
+import { draftService, SurveyDraft } from '../lib/draftService';
 import './WelcomeScreen.css';
 
 interface WelcomeScreenProps {
-  onStart: (name: string, nif: string) => void;
+  onStart: (name: string, nif: string, restoredAnswers?: any, restoredStep?: number) => void;
 }
 
 export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
   const [name, setName] = useState('');
   const [nif, setNif] = useState('');
   const [errors, setErrors] = useState<{ name?: string; nif?: string }>({});
+  const [isCheckingDraft, setIsCheckingDraft] = useState(false);
+  const [foundDraft, setFoundDraft] = useState<SurveyDraft | null>(null);
 
-  const handleStart = () => {
+  // Check for existing draft when NIF is valid
+  useEffect(() => {
+    const cleanNif = nif.replace(/\s/g, '').toUpperCase();
+    if (validateSpanishNIF(cleanNif)) {
+      const checkDraft = async () => {
+        setIsCheckingDraft(true);
+        const result = await draftService.getDraft(cleanNif);
+        if (result.success && result.data) {
+          setFoundDraft(result.data);
+          // Auto-fill name if found
+          if (!name) setName(result.data.client_name);
+        } else {
+          setFoundDraft(null);
+        }
+        setIsCheckingDraft(false);
+      };
+      checkDraft();
+    } else {
+      setFoundDraft(null);
+    }
+  }, [nif, name]);
+
+  const handleStart = useCallback((useDraft: boolean = false) => {
     const newErrors: { name?: string; nif?: string } = {};
     if (!name.trim()) newErrors.name = 'Por favor, introduzca su nombre completo';
-    if (!nif.trim()) newErrors.nif = 'Por favor, introduzca su NIF/NIE';
-    else if (!/^[0-9XYZ]\d{7}[A-Z]$/i.test(nif.replace(/\s/g, ''))) {
-      newErrors.nif = 'Formato de NIF/NIE no válido (ej: 12345678A)';
+    
+    const cleanNif = nif.replace(/\s/g, '').toUpperCase();
+    if (!cleanNif) {
+      newErrors.nif = 'Por favor, introduzca su NIF/NIE';
+    } else if (!validateSpanishNIF(cleanNif)) {
+      newErrors.nif = 'NIF/NIE no válido. Verifique el número y la letra.';
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -27,8 +56,12 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
       return;
     }
 
-    onStart(name.trim(), nif.trim().toUpperCase());
-  };
+    if (useDraft && foundDraft) {
+      onStart(foundDraft.client_name, cleanNif, foundDraft.answers, foundDraft.current_step);
+    } else {
+      onStart(name.trim(), cleanNif);
+    }
+  }, [name, nif, foundDraft, onStart]);
 
   return (
     <div className="welcome">
@@ -96,7 +129,12 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
               />
             </FieldGroup>
 
-            <FieldGroup label="NIF / NIE" required error={errors.nif}>
+            <FieldGroup 
+              label="NIF / NIE" 
+              required 
+              error={errors.nif}
+              help={isCheckingDraft ? 'Buscando borrador...' : undefined}
+            >
               <TextInput
                 id="welcome-nif"
                 value={nif}
@@ -110,15 +148,40 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
             </FieldGroup>
           </div>
 
-          <Button
-            variant="primary"
-            size="lg"
-            fullWidth
-            icon="🚀"
-            onClick={handleStart}
-          >
-            Comenzar cuestionario
-          </Button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-base)' }}>
+            {foundDraft ? (
+              <>
+                <Button
+                  variant="primary"
+                  size="lg"
+                  fullWidth
+                  icon="🔄"
+                  onClick={() => handleStart(true)}
+                >
+                  Continuar mi encuesta guardada
+                </Button>
+                <Button
+                  variant="outline"
+                  size="base"
+                  fullWidth
+                  onClick={() => handleStart(false)}
+                >
+                  Empezar una nueva encuesta
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant="primary"
+                size="lg"
+                fullWidth
+                icon="🚀"
+                onClick={() => handleStart(false)}
+                disabled={isCheckingDraft}
+              >
+                {isCheckingDraft ? 'Verificando...' : 'Comenzar cuestionario'}
+              </Button>
+            )}
+          </div>
 
           <p className="welcome__disclaimer">
             Sus datos serán tratados de forma confidencial conforme a la

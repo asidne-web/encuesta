@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { SurveyAnswers, SurveySection, Question } from '../types/survey';
+import { draftService } from '../lib/draftService';
 
 const STORAGE_KEY = 'rentafacil_survey';
 
@@ -15,13 +16,6 @@ interface ValidationErrors {
   [questionId: string]: string;
 }
 
-/**
- * Custom hook that manages the entire survey lifecycle:
- * - State management for answers
- * - localStorage persistence (auto-save)
- * - Validation per section
- * - Navigation guards
- */
 export function useSurvey(sections: SurveySection[]) {
   /* ---- Restore from localStorage ---- */
   const loadSavedState = (): PersistedState | null => {
@@ -44,6 +38,22 @@ export function useSurvey(sections: SurveySection[]) {
   const [startedAt] = useState(saved.current?.startedAt ?? new Date().toISOString());
   const [hasRestoredSession] = useState(!!saved.current);
 
+  /* ---- Sync with Supabase (Debounced/Strategic) ---- */
+  const syncDraft = useCallback(async (
+    name: string, 
+    nif: string, 
+    step: number, 
+    currAnswers: SurveyAnswers
+  ) => {
+    if (!nif) return;
+    await draftService.saveDraft({
+      client_nif: nif,
+      client_name: name,
+      current_step: step,
+      answers: currAnswers
+    });
+  }, []);
+
   /* ---- Auto-save to localStorage ---- */
   useEffect(() => {
     const state: PersistedState = {
@@ -59,7 +69,6 @@ export function useSurvey(sections: SurveySection[]) {
   /* ---- Answer handler ---- */
   const handleAnswer = useCallback((questionId: string, value: string | string[]) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
-    // Clear error for this field when user interacts
     setErrors((prev) => {
       if (prev[questionId]) {
         const next = { ...prev };
@@ -78,18 +87,13 @@ export function useSurvey(sections: SurveySection[]) {
 
       const validateQuestion = (q: Question) => {
         const val = answers[q.id];
-
-        // Required check
         if (q.required) {
           if (val === undefined || val === '' || (Array.isArray(val) && val.length === 0)) {
             newErrors[q.id] = 'Este campo es obligatorio';
             return;
           }
         }
-
-        // Only validate non-empty values
         if (val && typeof val === 'string' && val.trim()) {
-          // Custom regex validation (e.g. IBAN)
           if (q.validation) {
             const raw = val.replace(/\s/g, '');
             const regex = new RegExp(q.validation);
@@ -98,8 +102,6 @@ export function useSurvey(sections: SurveySection[]) {
             }
           }
         }
-
-        // Validate visible conditional sub-questions
         if (q.conditionals && typeof val === 'string') {
           q.conditionals.forEach((cond) => {
             if (val === cond.showWhen) {
@@ -110,7 +112,6 @@ export function useSurvey(sections: SurveySection[]) {
       };
 
       section.questions.forEach(validateQuestion);
-
       setErrors(newErrors);
       return Object.keys(newErrors).length === 0;
     },
@@ -120,39 +121,53 @@ export function useSurvey(sections: SurveySection[]) {
   /* ---- Navigation ---- */
   const goNext = useCallback(() => {
     if (!validateSection(currentStep - 1)) {
-      // Scroll to first error
       const firstErrorId = Object.keys(errors)[0];
       if (firstErrorId) {
         document.getElementById(firstErrorId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
       return false;
     }
-    setCurrentStep((prev) => Math.min(prev + 1, sections.length));
+    const nextStep = Math.min(currentStep + 1, sections.length);
+    setCurrentStep(nextStep);
+    // Sync to Supabase when moving to next section
+    syncDraft(clientName, clientNIF, nextStep, answers);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     return true;
-  }, [currentStep, validateSection, errors, sections.length]);
+  }, [currentStep, validateSection, errors, sections.length, clientName, clientNIF, answers, syncDraft]);
 
   const goPrev = useCallback(() => {
     setErrors({});
-    setCurrentStep((prev) => Math.max(prev - 1, 1));
+    const prevStep = Math.max(currentStep - 1, 1);
+    setCurrentStep(prevStep);
+    syncDraft(clientName, clientNIF, prevStep, answers);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  }, [currentStep, clientName, clientNIF, answers, syncDraft]);
 
   /* ---- Start / Init ---- */
-  const startSurvey = useCallback((name: string, nif: string) => {
+  const startSurvey = useCallback((name: string, nif: string, restoredAnswers?: SurveyAnswers, restoredStep?: number) => {
     setClientName(name);
     setClientNIF(nif);
-    setCurrentStep(1);
+    if (restoredAnswers) setAnswers(restoredAnswers);
+    if (restoredStep) setCurrentStep(restoredStep);
   }, []);
 
   /* ---- Reset ---- */
   const resetSurvey = useCallback(() => {
+    if (clientNIF) draftService.deleteDraft(clientNIF); // Clean up Supabase
     localStorage.removeItem(STORAGE_KEY);
     setClientName('');
     setClientNIF('');
     setCurrentStep(1);
     setAnswers({});
     setErrors({});
+  }, [clientNIF]);
+
+  /* ---- External Restore ---- */
+  const restoreSurvey = useCallback((data: PersistedState) => {
+    setClientName(data.clientName);
+    setClientNIF(data.clientNIF);
+    setAnswers(data.answers);
+    setCurrentStep(data.currentStep);
   }, []);
 
   /* ---- Computed values ---- */

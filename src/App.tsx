@@ -40,10 +40,14 @@ function App() {
 
   /* ---- Start fresh ---- */
   const handleStart = useCallback(
-    (name: string, nif: string) => {
-      survey.startSurvey(name, nif);
+    (name: string, nif: string, restoredAnswers?: any, restoredStep?: number) => {
+      survey.startSurvey(name, nif, restoredAnswers, restoredStep);
       setView('survey');
-      addToast('info', '¡Bienvenido! Su progreso se guardará automáticamente.');
+      if (restoredAnswers) {
+        addToast('success', 'Sesión recuperada de la nube. Continúe donde lo dejó.');
+      } else {
+        addToast('info', '¡Bienvenido! Su progreso se guardará automáticamente.');
+      }
     },
     [survey, addToast]
   );
