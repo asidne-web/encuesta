@@ -66,7 +66,12 @@ BEGIN
   NEW.updated_at = NOW();
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+SECURITY INVOKER; -- Fix: Set to INVOKER to avoid security definer warnings
+
+-- Fix: Revoke execute from public to prevent RPC calls to this trigger function
+REVOKE EXECUTE ON FUNCTION public.handle_updated_at() FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.handle_updated_at() FROM anon, authenticated;
 
 CREATE OR REPLACE TRIGGER on_survey_submissions_updated
   BEFORE UPDATE ON public.survey_submissions

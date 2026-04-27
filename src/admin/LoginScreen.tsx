@@ -68,16 +68,14 @@ export const LoginScreen: React.FC = () => {
             </div>
           )}
 
-          <Button
-            variant="primary"
-            size="lg"
-            fullWidth
-            icon={loading ? '⏳' : '→'}
-            onClick={() => {}}
+          <button
+            type="submit"
+            className={`btn btn--primary btn--lg btn--full ${loading || !email.trim() || !password.trim() ? '' : ''}`}
             disabled={loading || !email.trim() || !password.trim()}
           >
+            <span className="btn__icon">{loading ? '⏳' : '→'}</span>
             {loading ? 'Accediendo...' : 'Acceder al panel'}
-          </Button>
+          </button>
         </form>
 
         <p className="login__footer">
