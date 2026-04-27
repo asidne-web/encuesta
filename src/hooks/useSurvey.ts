@@ -162,14 +162,6 @@ export function useSurvey(sections: SurveySection[]) {
     setErrors({});
   }, [clientNIF]);
 
-  /* ---- External Restore ---- */
-  const restoreSurvey = useCallback((data: PersistedState) => {
-    setClientName(data.clientName);
-    setClientNIF(data.clientNIF);
-    setAnswers(data.answers);
-    setCurrentStep(data.currentStep);
-  }, []);
-
   /* ---- Computed values ---- */
   const currentSection = sections[currentStep - 1];
   const isFirstStep = currentStep === 1;

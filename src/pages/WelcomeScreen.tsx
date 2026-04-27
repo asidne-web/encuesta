@@ -4,7 +4,8 @@ import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { FieldGroup, TextInput } from '../components/FormControls';
 import { validateSpanishNIF } from '../lib/validations';
-import { draftService, SurveyDraft } from '../lib/draftService';
+import { draftService } from '../lib/draftService';
+import type { SurveyDraft } from '../lib/draftService';
 import './WelcomeScreen.css';
 
 interface WelcomeScreenProps {
@@ -161,8 +162,8 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
                   Continuar mi encuesta guardada
                 </Button>
                 <Button
-                  variant="outline"
-                  size="base"
+                  variant="ghost"
+                  size="md"
                   fullWidth
                   onClick={() => handleStart(false)}
                 >

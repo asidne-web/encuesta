@@ -13,6 +13,7 @@ export const draftService = {
    * Saves or updates a draft in Supabase
    */
   async saveDraft(draft: SurveyDraft) {
+    if (!supabase) return { success: false, error: 'Supabase not configured' };
     try {
       const { error } = await supabase
         .from('survey_drafts')
@@ -36,6 +37,7 @@ export const draftService = {
    * Retrieves a draft by NIF
    */
   async getDraft(nif: string) {
+    if (!supabase) return { success: false, error: 'Supabase not configured' };
     try {
       const { data, error } = await supabase
         .from('survey_drafts')
@@ -55,6 +57,7 @@ export const draftService = {
    * Deletes a draft (call this after final submission)
    */
   async deleteDraft(nif: string) {
+    if (!supabase) return { success: false };
     try {
       const { error } = await supabase
         .from('survey_drafts')

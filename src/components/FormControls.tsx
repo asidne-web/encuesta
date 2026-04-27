@@ -9,6 +9,7 @@ interface FieldGroupProps {
   label: string;
   required?: boolean;
   hint?: string;
+  help?: string;
   error?: string;
   documentInfo?: string;
   children: React.ReactNode;
@@ -18,6 +19,7 @@ export const FieldGroup: React.FC<FieldGroupProps> = ({
   label,
   required,
   hint,
+  help,
   error,
   documentInfo,
   children,
@@ -25,6 +27,7 @@ export const FieldGroup: React.FC<FieldGroupProps> = ({
   <div className="field-group">
     <label className={`field-group__label ${required ? 'field-group__label--required' : ''}`}>
       {label}
+      {help && <span style={{ marginLeft: 'var(--space-sm)', fontSize: '0.8em', color: 'var(--color-primary)', fontWeight: 'normal' }}>({help})</span>}
     </label>
     {hint && <p className="field-group__hint">{hint}</p>}
     {children}
